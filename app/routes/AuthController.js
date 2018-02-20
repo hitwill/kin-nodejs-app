@@ -14,28 +14,7 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 var config = require('../config');
 
-// REGISTERS A NEW USER
-router.post('/register', function(req, res) {
-
-  var hashedPassword = bcrypt.hashSync(req.body.password, 8);
-  
-  User.create({
-    name : req.body.name,
-    email : req.body.email,
-    password : hashedPassword
-  },
-  function (err, user) {
-    if (err) return res.status(500).send("There was a problem registering the user.")
-    // create a token
-    var token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400 // expires in 24 hours
-    });
-    res.status(200).send({ auth: true, token: token });
-  }); 
-
-});
-
-// VERIFIES TOKEN, AND RETURNS CURRENT REGISTERED USER FROM THE DATABASE
+// TOKEN VERIFICATION
 router.get('/verify', VerifyToken, function(req, res, next) {
   var token = req.headers['x-access-token'];
   if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
@@ -54,7 +33,7 @@ router.get('/verify', VerifyToken, function(req, res, next) {
   });
 });
 
-// UPDATES A SINGLE USER IN THE DATABASE
+// USERNAME & PASSWORD VERIFICATION
 router.get('/login/:password', function (req, res) {
   if(bcrypt.compareSync(req.params.password, '$2a$08$FftxVVrf0ueDhCEX2xKoYu2ICf8gWRH3pv.RCiUr.9c8STv5dgBRq')){
       res.status(200).send('correct password');
