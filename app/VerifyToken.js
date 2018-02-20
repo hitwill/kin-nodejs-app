@@ -1,7 +1,7 @@
 //VerifyToken.js
 
 var jwt = require('jsonwebtoken');
-var config = require('../config');
+var config = require('./config');
 
 function verifyToken(req, res, next) {
   var token = req.headers['x-access-token'];
