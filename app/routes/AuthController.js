@@ -34,13 +34,19 @@ router.get('/verify', VerifyToken, function(req, res, next) {
 });
 
 // USERNAME & PASSWORD VERIFICATION
-router.get('/login/:password', function (req, res) {
-  if(bcrypt.compareSync(req.params.password, '$2a$08$FftxVVrf0ueDhCEX2xKoYu2ICf8gWRH3pv.RCiUr.9c8STv5dgBRq')){
-      res.status(200).send('correct password');
-  }
-  else{
-      res.status(200).send('wrong password');
-  }
+router.get('/login/:username/:password', function (req, res) {
+
+  User.findOne({ 'email': req.params.username }, function (err, user) {
+    if (err) return res.status(500).send({ auth: false, message: 'There was an error retrieving your user.' });
+
+    if(bcrypt.compareSync(req.params.password, user.password)){
+        res.status(200).send(user);
+    }
+    else{
+        res.status(200).send('wrong password');
+    }
+  });
+
 });
 
 module.exports = router;

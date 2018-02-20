@@ -2,6 +2,7 @@
 
 var express = require('express');
 var app = express();
+var ejs = require('ejs');
 var db = require('./db');
 
 var AuthController = require('./routes/UserController');
