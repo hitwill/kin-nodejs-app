@@ -1,17 +1,25 @@
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
 
 router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json());
-var User = require('../schemas/User');
 
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-var config = require('../config');
+const User = require('../schemas/User');
+const VerifyToken = require('../VerifyToken');
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
+
+
+
+
 
 // REGISTERS A NEW USER
-router.post('/', function(req, res) {
+router.post('/', function(req, res, next) {
+
+  console.log('loc api/user/');
 
   var hashedPassword = bcrypt.hashSync(req.body.password, 8);
   
@@ -26,7 +34,7 @@ router.post('/', function(req, res) {
     var token = jwt.sign({ id: user._id }, config.secret, {
       expiresIn: 86400 // expires in 24 hours
     });
-    res.status(200).send({ auth: true, token: token });
+    return res.send('Thanks for registering.  You can now log in.')
   }); 
 
 });

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <% include ../partials/header.ejs %>
+</head>
+
+<body>
+
+<div id='main'>
+
+
+	<div id='login' style="display: none">
+		<h1>&nbsp;Login</h1>
+	    <label for="username">&nbsp;Email: </label>
+	    <input id="username" type="text" name="username" value="">
+	    
+	    <label for="password">&nbsp;Password:</label>
+	    <input id="password" type="password" name="password" value="">
+	    
+	    <input id="loginBtn" type="button" value="Login"><br><br>
+
+	    &nbsp;<input id="signupBtn" type="button" value="Sign Up"><br>
+	</div>
+
+
+	<div id='signup' style="display: none">
+		<h1>Sign up</h1>
+		<form action="/api/user" method="post">
+		    <label for="name">Enter name:</label>
+		    <input id="name" type="text" name="name" value="">
+		    <br>
+		    <label for="email">Enter email: </label>
+		    <input id="email" type="text" name="email" value="">
+		    <br>
+		    <label for="password">Enter password: </label>
+		    <input id="password" type="password" name="password" value="">
+		    <br>
+		    <label for="password2">Re-enter password: </label>
+		    <input id="password2" type="password" name="password2" value="">
+		    
+		    <input type="submit" value="OK">
+		</form>
+	</div>
+
+
+	<div id='home' style="display: none">
+		<h1>&nbsp;Home</h1>
+		&nbsp;<input id='logoutBtn' type="button" value="Logout">
+	</div>
+
+</div>
+
+</body>
+
+</html>

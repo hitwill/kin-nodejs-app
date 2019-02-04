@@ -1,52 +1,67 @@
 // AuthController.js
 
-var express = require('express');
-var router = express.Router();
-var bodyParser = require('body-parser');
+const express = require('express');
+const router = express.Router();
+const bodyParser = require('body-parser');
+
+const User = require('../schemas/User');
+const VerifyToken = require('../VerifyToken');
+
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
-var User = require('../schemas/User');
-var VerifyToken = require('../VerifyToken');
-
-var jwt = require('jsonwebtoken');
-var bcrypt = require('bcryptjs');
-var config = require('../config');
 
 // TOKEN VERIFICATION
 router.get('/verify', VerifyToken, function(req, res, next) {
-  var token = req.headers['x-access-token'];
-  if (!token) return res.status(401).send({ auth: false, message: 'No token provided.' });
+
+  console.log('loc get api/auth/verify');
+
+  //VerifyToken is called first
   
-  jwt.verify(token, config.secret, function(err, decoded) {
-    if (err) return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
-    
-	User.findById(decoded.id, {password: 0},
+	User.findById(req.userId, {password: 0},
   	function (err, user) {
     	if (err) return res.status(500).send("There was a problem finding the user.");
     	if (!user) return res.status(404).send("No user found.");
     
     	res.status(200).send(user);
-
-  	});
   });
+
 });
 
 // USERNAME & PASSWORD VERIFICATION
-router.get('/login/:username/:password', function (req, res) {
+router.get('/login', function (req, res) {
 
-  User.findOne({ 'email': req.params.username }, function (err, user) {
+  console.log('loc get api/auth/login');
+
+  console.log(req.query.username);
+  console.log(req.query.password);
+
+  User.findOne({ 'email': req.query.username }, function (err, user) {
     if (err) return res.status(500).send({ auth: false, message: 'There was an error retrieving your user.' });
 
-    if(bcrypt.compareSync(req.params.password, user.password)){
-        res.status(200).send(user);
+    if (user == null) {
+       return res.status(403).send('User not found');
+    }
+
+    if(bcrypt.compareSync(req.query.password, user.password)){
+        // create a token
+        var token = jwt.sign({ id: user._id }, config.secret, {
+          expiresIn: 86400 // expires in 24 hours
+        });
+
+        console.log(user.name + ' has logged in');
+
+        return res.status(200).send({ auth: true, token: token });
+
     }
     else{
-        res.status(200).send('wrong password');
+        return res.status(403);
     }
   });
-
 });
 
 module.exports = router;
