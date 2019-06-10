@@ -2,3 +2,4 @@
 npm-debug.log
 .serverless
 variables.env
+node_modules
