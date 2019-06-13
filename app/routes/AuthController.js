@@ -40,7 +40,7 @@ router.get('/login', function (req, res) {
   console.log(req.query.username);
   console.log(req.query.password);
 
-  User.findOne({ 'email': req.query.username }, function (err, user) {
+  User.findOne({ 'username': req.query.username }, function (err, user) {
     if (err) return res.status(500).send({ auth: false, message: 'There was an error retrieving your user.' });
 
     if (user == null) {
@@ -49,11 +49,11 @@ router.get('/login', function (req, res) {
 
     if(bcrypt.compareSync(req.query.password, user.password)){
         // create a token
-        var token = jwt.sign({ id: user._id }, config.secret, {
+        let token = jwt.sign({ id: user._id }, config.secret, {
           expiresIn: 86400 // expires in 24 hours
         });
 
-        console.log(user.name + ' has logged in');
+        console.log(user.username + ' has logged in');
 
         return res.status(200).send({ auth: true, token: token });
 

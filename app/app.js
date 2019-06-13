@@ -1,9 +1,9 @@
-var express = require('express');
-var app = express();
-var db = require('./db');
+const express = require('express');
+const app = express();
+const db = require('./db');
 const ejs = require('ejs');
 const path = require('path')
-var VerifyToken = require('./VerifyToken');
+const VerifyToken = require('./VerifyToken');
 
 app.use(express.static(path.join(__dirname, 'public')))
 app.set('views', path.join(__dirname, 'views'))

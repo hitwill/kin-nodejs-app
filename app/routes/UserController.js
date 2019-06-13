@@ -12,64 +12,99 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const config = require('../config');
 
+let mongoose = require('mongoose');  
 
-
-
-
-// REGISTERS A NEW USER
+// Registers a new user
 router.post('/', function(req, res, next) {
 
   console.log('loc api/user/');
 
-  var hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  let hashedPassword = bcrypt.hashSync(req.body.password, 8);
   
-  User.create({
-    name : req.body.name,
-    email : req.body.email,
-    password : hashedPassword
-  },
-  function (err, user) {
-    if (err) return res.status(500).send("There was a problem registering the user.")
-    // create a token
-    var token = jwt.sign({ id: user._id }, config.secret, {
-      expiresIn: 86400 // expires in 24 hours
+  const user = new User({
+    _id: new mongoose.Types.ObjectId(),
+    username: req.body.name,
+    email: req.body.email,
+    password: hashedPassword
+  });
+
+  user
+    .save()
+    .then(result => {
+    // // create a token
+    // let token = jwt.sign({ id: user._id }, config.secret, {
+    //   expiresIn: 86400 // expires in 24 hours
+    // });
+    return res.status(200).send(result);
+    })
+    .catch(err => {
+      res.status(500).json({error: err});
     });
-    return res.send('Thanks for registering.  You can now log in.')
-  }); 
 
 });
 
-// RETURNS ALL THE USERS IN THE DATABASE
+// Returns all users from the database
 router.get('/', function (req, res) {
-    User.find({}, function (err, users) {
-        if (err) return res.status(500).send("There was a problem finding the users.");
-        res.status(200).send(users);
-    });
+
+    User
+      .find()
+      .select("-password")
+      .exec()
+      .then(users => {
+        res.status(200).json(users);
+      })
+      .catch(err => {
+        res.status(500).json({error: err});
+      });
+
 });
 
-// GETS A SINGLE USER FROM THE DATABASE
+// Returns a single user from the database
 router.get('/:id', function (req, res) {
-    User.findById(req.params.id, function (err, user) {
-        if (err) return res.status(500).send("There was a problem finding the user.");
-        if (!user) return res.status(404).send("No user found.");
-        res.status(200).send(user);
-    });
+
+    User
+      .findById(req.params.id)
+      .select("-password")
+      .exec()
+      .then(user => {
+        res.status(200).json(user);
+      })
+      .catch(err => {
+        res.status(500).json({error: err});
+      });
+
 });
 
-// DELETES A USER FROM THE DATABASE
+// Deletes a single user from the database
 router.delete('/:id', function (req, res) {
-    User.findByIdAndRemove(req.params.id, function (err, user) {
-        if (err) return res.status(500).send("There was a problem deleting the user.");
-        res.status(200).send("User: "+ user.name +" was deleted.");
-    });
+
+    User
+      .findByIdAndRemove('5cfdbb93b33b8a2570c2920b')
+      .exec()
+      .then(user => {
+        res.status(200).json(user.username + ' deleted');
+      })
+      .catch(err => {
+        res.status(500).json({error: err});
+      });
+
 });
 
-// UPDATES A SINGLE USER IN THE DATABASE
+// Updates a single user in the database
 router.put('/:id', function (req, res) {
-    User.findByIdAndUpdate(req.params.id, req.body, {new: true}, function (err, user) {
-        if (err) return res.status(500).send("There was a problem updating the user.");
-        res.status(200).send(user);
-    });
+
+    //Incomplete
+
+    User
+      .findByIdAndUpdate('5cfdbb93b33b8a2570c2920b')
+      .exec()
+      .then(user => {
+        res.status(200).json('user deleted');
+      })
+      .catch(err => {
+        res.status(500).json({error: err});
+      });
+
 });
 
 
