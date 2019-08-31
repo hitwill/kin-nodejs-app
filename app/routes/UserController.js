@@ -15,7 +15,7 @@ router.post('/', function(req, res, next) {
 
   console.log('loc api/user/');
 
-  let hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
   
   const user = new User({
     _id: new mongoose.Types.ObjectId(),

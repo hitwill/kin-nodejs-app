@@ -112,7 +112,7 @@ router.get('/whitelist', function(req, res, next) {
 //           }
 //           if(bcrypt.compareSync(req.query.password, user.password)){
 //               // create a token
-//               let token = jwt.sign({ id: user._id }, config.secret, {
+//               const token = jwt.sign({ id: user._id }, config.secret, {
 //                 expiresIn: 86400 // expires in 24 hours
 //               });
 

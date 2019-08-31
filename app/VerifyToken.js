@@ -1,13 +1,13 @@
 //VerifyToken.js
 
-let jwt = require('jsonwebtoken');
-let config = require('./config');
+const jwt = require('jsonwebtoken');
+const config = require('./config');
 
 function verifyToken(req, res, next) {
 
   console.log('loc verifyToken')
 
-  let token = req.headers['x-access-token'];
+  const token = req.headers['x-access-token'];
   
   if (!token){
     return res.status(403).send({ auth: false, message: 'No token provided.' });
@@ -21,6 +21,7 @@ function verifyToken(req, res, next) {
     req.userId = user.id;
     next();
   });
+
 }
 
 module.exports = verifyToken;
