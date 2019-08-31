@@ -1,18 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
-
-router.use(bodyParser.urlencoded({ extended: true }));
-router.use(bodyParser.json());
-
 const User = require('../schemas/User');
 const VerifyToken = require('../VerifyToken');
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../config');
+const mongoose = require('mongoose'); 
 
-let mongoose = require('mongoose');  
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json()); 
 
 // Registers a new user
 router.post('/', function(req, res, next) {
@@ -79,7 +75,7 @@ router.get('/:id', function (req, res) {
 router.delete('/:id', function (req, res) {
 
     User
-      .findByIdAndRemove('5cfdbb93b33b8a2570c2920b')
+      .findByIdAndRemove('')
       .exec()
       .then(user => {
         res.status(200).json(user.username + ' deleted');
@@ -96,7 +92,7 @@ router.put('/:id', function (req, res) {
     //Incomplete
 
     User
-      .findByIdAndUpdate('5cfdbb93b33b8a2570c2920b')
+      .findByIdAndUpdate('')
       .exec()
       .then(user => {
         res.status(200).json('user deleted');

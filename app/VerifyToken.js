@@ -8,8 +8,10 @@ function verifyToken(req, res, next) {
   console.log('loc verifyToken')
 
   let token = req.headers['x-access-token'];
-  if (!token)
+  
+  if (!token){
     return res.status(403).send({ auth: false, message: 'No token provided.' });
+  }
 
   jwt.verify(token, config.secret, function(err, user) {
     if (err)

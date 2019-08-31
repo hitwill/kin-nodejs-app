@@ -23,4 +23,7 @@ app.use('/api/user', UserController);
 const AuthController = require('./routes/AuthController');
 app.use('/api/auth', AuthController);
 
+const KinController = require('./routes/KinController');
+app.use('/api/kin', KinController);
+
 module.exports = app;
