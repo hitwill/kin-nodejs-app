@@ -13,7 +13,7 @@ app.get('/', function(req, res) {
 	
 	console.log("/");
 
-	return res.render('../views/pages/index');
+	return res.send('Hello World');
 
 });
 
