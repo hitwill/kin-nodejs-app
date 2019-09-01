@@ -1,7 +1,7 @@
 //VerifyToken.js
 
 const jwt = require('jsonwebtoken');
-const config = require('./config');
+require('dotenv').config();
 
 function verifyToken(req, res, next) {
 
@@ -13,7 +13,7 @@ function verifyToken(req, res, next) {
     return res.status(403).send({ auth: false, message: 'No token provided.' });
   }
 
-  jwt.verify(token, config.secret, function(err, user) {
+  jwt.verify(token, process.env.SECRET, function(err, user) {
     if (err)
     return res.status(500).send({ auth: false, message: 'Failed to authenticate token.' });
 

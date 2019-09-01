@@ -5,7 +5,7 @@ const User = require('../schemas/User');
 const VerifyToken = require('../VerifyToken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const config = require('../config');
+require('dotenv').config();
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
@@ -43,7 +43,7 @@ router.get('/login', function (req, res) {
           }
           if(bcrypt.compareSync(req.query.password, user.password)){
               // create a token
-              const token = jwt.sign({ id: user._id }, config.secret, {
+              const token = jwt.sign({ id: user._id }, process.env.SECRET, {
                 expiresIn: 86400 // expires in 24 hours
               });
 
