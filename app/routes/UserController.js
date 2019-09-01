@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bodyParser = require('body-parser');
 const User = require('../schemas/User');
+const Transaction = require('../schemas/Transaction');
 const VerifyToken = require('../VerifyToken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -13,15 +14,16 @@ router.use(bodyParser.json());
 // Registers a new user
 router.post('/', function(req, res, next) {
 
-  console.log('loc api/user/');
+  //console.log('loc api/user/');
 
-  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  //const hashedPassword = bcrypt.hashSync(req.body.password, 8);
   
   const user = new User({
     _id: new mongoose.Types.ObjectId(),
-    username: req.body.name,
-    email: req.body.email,
-    password: hashedPassword
+    //username: req.body.name,
+    // email: req.body.email,
+    email: 'chaseeb@gmail.com'
+    //password: hashedPassword
   });
 
   user
@@ -98,6 +100,38 @@ router.put('/:id', function (req, res) {
         res.status(200).json('user deleted');
       })
       .catch(err => {
+        res.status(500).json({error: err});
+      });
+
+});
+
+//test transaction schema
+router.get('/transaction/:id', function (req, res) {
+
+    //test data
+    const transaction = new Transaction({
+      txId:'12345',
+      txDirection: 'Receive'
+    });
+
+    User
+    //test id
+      .findById('5d6c4cc13b127d3352d20976')
+      .exec()
+      .then(user => {
+
+        user.transactions.push(transaction);
+
+        user.save().then(function(result){
+          res.status(200).json(user);
+        })
+        .catch(err => {
+          res.status(500).json({error: err});
+        });
+
+      })
+      .catch(err => {
+        console.log(err);
         res.status(500).json({error: err});
       });
 

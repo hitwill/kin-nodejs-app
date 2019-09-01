@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const TransactionSchema =mongoose.Schema({
+const TransactionSchema = new mongoose.Schema({
 	txId: {
 		type: String,
 		required: true
@@ -8,19 +8,23 @@ const TransactionSchema =mongoose.Schema({
 	txDirection: {
 		type: String,
 		required: true
-	},
-	toFromPublicAddress: {
-		type: String,
-		required: true
-	},
-	amount: {
-		type: Number,
-		required: true
-	},
-	note: {
-		type: String,
-		required: true
 	}
+	// txDirection: {
+	// 	type: String,
+	// 	required: true
+	// },
+	// toFromPublicAddress: {
+	// 	type: String,
+	// 	required: true
+	// },
+	// amount: {
+	// 	type: Number,
+	// 	required: true
+	// },
+	// note: {
+	// 	type: String,
+	// 	required: true
+	// }
 });
 
 mongoose.model('Transaction', TransactionSchema);
