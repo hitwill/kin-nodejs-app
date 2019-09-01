@@ -1,18 +1,24 @@
-//User.js
+const mongoose = require('mongoose');
 
-const mongoose = require('mongoose');  
+const Transaction = require('./Transaction');
+
 const UserSchema = new mongoose.Schema({ 
   _id: mongoose.Schema.Types.ObjectId, 
-  email: String,
-  password: String,
-  publicAddress: String,
-  transactions: [{
-  	txId: String,
+  email: {
   	type: String,
-  	sentTo: String,
-  	receivedFrom: String,
-  	amount: Number,
-  	note: String
+  	required: true
+  },
+  password: {
+  	type: String,
+  	required: true
+  },
+  publicAddress: {
+  	type: String,
+  	required: true
+  },
+  transactions: [{
+  	type: String,
+  	ref: Transaction
   }]
 });
 
