@@ -39,21 +39,3 @@
 // 		localStorage.removeItem('x-access-token');
 // 		window.location = '/';
 // 	}
-
-// 	function signup(){
-// 		$('#login').hide();
-// 		$('#signup').show();
-// 	}
-
-// 	$( "#loginBtn" ).click(function() {
-//   		appLogin();
-// 	});
-
-// 	$( "#logoutBtn" ).click(function() {
-//   		appLogout();
-// 	});
-
-// 	$( "#signupBtn" ).click(function() {
-//   		signup();
-// 	});
-// });
