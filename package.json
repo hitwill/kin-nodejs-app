@@ -4,7 +4,8 @@
   "description": "none",
   "main": "app.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "devStart": "nodemon server.js"
   },
   "author": "Chase Barker",
   "license": "UNLICENSED",
@@ -17,7 +18,10 @@
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
     "mongoose": "^5.0.1",
-    "nodemon": "^1.18.3",
     "vue": "^2.5.17"
+  },
+  "devDependencies": {
+    "dotenv": "^8.1.0",
+    "nodemon": "^1.19.1"
   }
 }
