@@ -18,12 +18,18 @@ router.post('/', function(req, res, next) {
 
   //const hashedPassword = bcrypt.hashSync(req.body.password, 8);
   
+  // const user = new User({
+  //   _id: new mongoose.Types.ObjectId(),
+  //   username: req.body.name,
+  //   email: req.body.email,
+  //   password: hashedPassword
+  // });
+
+  //test data
   const user = new User({
-    _id: new mongoose.Types.ObjectId(),
-    //username: req.body.name,
-    // email: req.body.email,
-    email: 'chaseeb@gmail.com'
-    //password: hashedPassword
+    email: 'test email address',
+    password: 'test password',
+    publicAddress: 'test publicAddress'
   });
 
   user
@@ -110,13 +116,17 @@ router.get('/transaction/:id', function (req, res) {
 
     //test data
     const transaction = new Transaction({
-      txId:'12345',
-      txDirection: 'Receive'
+      txId:'test txId',
+      status: 'test status',
+      toAddress: 'test toAddress',
+      fromAddress: 'test fromAddress',
+      amount: '100',
+      note: 'test note'
     });
 
     User
     //test id
-      .findById('5d6c4cc13b127d3352d20976')
+      .findById('5d6c6c52cfa3da365181bac5')
       .exec()
       .then(user => {
 
