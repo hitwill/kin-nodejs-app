@@ -52,7 +52,7 @@ router.get('/login', function (req, res) {
               return res.status(200).send({ auth: true, token: token });
           }
           else{
-              return res.status(403);
+              return res.status(403).send('Incorrect login credentials.');
           }
     })
     .catch(err => {

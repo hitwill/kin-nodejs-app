@@ -14,32 +14,19 @@ router.use(bodyParser.json());
 // Registers a new user
 router.post('/', function(req, res, next) {
 
-  //console.log('loc api/user/');
-
-  //const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
   
-  // const user = new User({
-  //   _id: new mongoose.Types.ObjectId(),
-  //   username: req.body.name,
-  //   email: req.body.email,
-  //   password: hashedPassword
-  // });
-
-  //test data
   const user = new User({
-    email: 'test email address',
-    password: 'test password',
-    publicAddress: 'test publicAddress'
+    _id: new mongoose.Types.ObjectId(),
+    email: req.body.email,
+    password: hashedPassword,
+    publicAddress: req.body.publicAddress
   });
 
   user
     .save()
     .then(result => {
-    // // create a token
-    // let token = jwt.sign({ id: user._id }, config.secret, {
-    //   expiresIn: 86400 // expires in 24 hours
-    // });
-    return res.status(200).send(result);
+      return res.status(200).send(result);
     })
     .catch(err => {
       res.status(500).json({error: err});
@@ -49,7 +36,6 @@ router.post('/', function(req, res, next) {
 
 // Returns all users from the database
 router.get('/', function (req, res) {
-
     User
       .find()
       .select("-password")
@@ -60,12 +46,10 @@ router.get('/', function (req, res) {
       .catch(err => {
         res.status(500).json({error: err});
       });
-
 });
 
 // Returns a single user from the database
 router.get('/:id', function (req, res) {
-
     User
       .findById(req.params.id)
       .select("-password")
@@ -76,57 +60,38 @@ router.get('/:id', function (req, res) {
       .catch(err => {
         res.status(500).json({error: err});
       });
-
 });
 
 // Deletes a single user from the database
 router.delete('/:id', function (req, res) {
-
     User
-      .findByIdAndRemove('')
+      .findByIdAndRemove(req.params.id)
       .exec()
       .then(user => {
-        res.status(200).json(user.username + ' deleted');
+        res.status(200).json(user + ' deleted');
       })
       .catch(err => {
         res.status(500).json({error: err});
       });
-
 });
 
 // Updates a single user in the database
 router.put('/:id', function (req, res) {
-
-    //Incomplete
-
     User
-      .findByIdAndUpdate('')
+      .findByIdAndUpdate(req.params.id)
       .exec()
       .then(user => {
-        res.status(200).json('user deleted');
+        res.status(200).json(user.email + 'updated');
       })
       .catch(err => {
         res.status(500).json({error: err});
       });
-
 });
 
-//test transaction schema
-router.get('/transaction/:id', function (req, res) {
-
-    //test data
-    const transaction = new Transaction({
-      txId:'test txId',
-      status: 'test status',
-      toAddress: 'test toAddress',
-      fromAddress: 'test fromAddress',
-      amount: '100',
-      note: 'test note'
-    });
-
+//Add transactinon to User
+router.post('/transaction/:id', function (req, res) {
     User
-    //test id
-      .findById('5d6c6c52cfa3da365181bac5')
+      .findById(req.params.id)
       .exec()
       .then(user => {
 
@@ -144,7 +109,29 @@ router.get('/transaction/:id', function (req, res) {
         console.log(err);
         res.status(500).json({error: err});
       });
+});
 
+//Get a single user transaction by id
+router.post('/transaction/:id', function (req, res) {
+    User
+      .findById(req.params.id)
+      .exec()
+      .then(user => {
+
+        user.transactions.push(transaction);
+
+        user.save().then(function(result){
+          res.status(200).json(user);
+        })
+        .catch(err => {
+          res.status(500).json({error: err});
+        });
+
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(500).json({error: err});
+      });
 });
 
 
