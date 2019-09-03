@@ -64,24 +64,42 @@ router.get('/:id', function (req, res) {
 
 // Deletes a single user from the database
 router.delete('/:id', function (req, res) {
-    User
-      .findByIdAndRemove(req.params.id)
-      .exec()
+
+    User.findById(req.params.id)
+    .exec()
+    .then(user =>{
+      const email = user.email;
+      user.delete()
       .then(user => {
-        res.status(200).json(user + ' deleted');
-      })
-      .catch(err => {
-        res.status(500).json({error: err});
+        res.status(200).json(user.email + ' has been deleted');
       });
+    })
+    .catch(err => {
+      res.status(500).json({error: err});
+    });
+
+    // User
+    //   .findByIdAndRemove(req.params.id)
+    //   .exec()
+    //   .then(user => {
+    //     res.status(200).json(user + ' deleted');
+    //   })
+    //   .catch(err => {
+    //     res.status(500).json({error: err});
+    //   });
 });
 
 // Updates a single user in the database
 router.put('/:id', function (req, res) {
     User
-      .findByIdAndUpdate(req.params.id)
+      .findById(req.params.id)
       .exec()
       .then(user => {
-        res.status(200).json(user.email + 'updated');
+        user.email = req.body.email;
+        user.save()
+        .then(user =>{
+          res.status(200).json('email has been updated to ' + user.email);
+        });
       })
       .catch(err => {
         res.status(500).json({error: err});
