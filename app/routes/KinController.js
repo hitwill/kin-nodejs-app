@@ -10,12 +10,13 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 const account = client.createKinAccount({
-            //seed: 'seed',
+            //your seed goes here
+            seed: process.env.PLAYGROUND_SEED,
             appId: 'chas',
             //channelSecretKeys: ['channel_seed1', 'channel_seed2']
         });
 
-app.post('/create', function(req, res) {
+router.post('/create', function(req, res) {
   client.getMinimumFee()
       .then(minFee => {
           account.buildCreateAccount({
@@ -26,28 +27,26 @@ app.post('/create', function(req, res) {
           }).then(createAccountBuilder => {
               return account.submitTransaction(createAccountBuilder)
           }).then(transactionId => {
-              console.log(transactionId);
               res.json({transactionId: transactionId});
           }).catch( err => {
-              console.log(err);
+              res.json(err);
           });
       }).catch(err => {
-          console.log(err);
+          res.json(err);
       });
 });
 
-app.get('/account', function(req, res) {
+router.get('/account', function(req, res) {
   client.getAccountData(req.body.address)
     .then(accountData => {
-        console.log(accountData);
         res.json({accountData: accountData});
     })
     .catch(err => {
-      
+      res.json(err);
     })
 });
 
-app.post('/pay', function(req, res) {
+router.post('/pay', function(req, res) {
   client.getMinimumFee()
     .then(minFee => {
         account.buildSendKin({
@@ -58,29 +57,39 @@ app.post('/pay', function(req, res) {
         }).then(builder => {
             return account.submitTransaction(builder)
         }).then(transactionId => {
-            console.log(transactionId);
             res.json({transactionId: transactionId});
+        })
+        .catch(err => {
+          res.json(err);
         });
     });
 });
 
-app.get('/balance', function(req, res) {
+router.get('/balance', function(req, res) {
+  console.log(req.body.address);
   client.getAccountBalance(req.body.address)
     .then(balance => {
         console.log(balance);
         res.json({balance: balance})
+    })
+    .catch(err => {
+      console.log('what');
+      res.json(err);
     });
 });
 
-app.get('/transaction', function(req, res) {
+router.get('/transaction', function(req, res) {
   client.getTransactionData(req.body.transactionId)
     .then(transactionData => {
         console.log(transactionData)
         res.json({transactionData: transactionData});
+    })
+    .catch(err => {
+      res.json(transactionData);
     });
 });
 
-app.get('/whitelist', function(req, res) {
+router.get('/whitelist', function(req, res) {
 
     let whitelistTransaction = account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id});
 
