@@ -15,53 +15,81 @@ const account = client.createKinAccount({
             //channelSecretKeys: ['channel_seed1', 'channel_seed2']
         });
 
-router.get('/createaccount', function(req, res, next) {
+app.post('/create', function(req, res) {
 
-  console.log('loc /createaccount');
+    console.log(req.body.address);
 
-  client.getMinimumFee()
-        .then(minFee =>{
-            //save minimum fee
+    client.getMinimumFee()
+        .then(minFee => {
+            account.buildCreateAccount({
+                address: req.body.address,
+                startingBalance: 100,
+                fee: minFee,
+                memoText: 'kinwallet'
+            }).then(createAccountBuilder => {
+                return account.submitTransaction(createAccountBuilder)
+            }).then(transactionId => {
+                console.log(transactionId);
+                res.json({transactionId: transactionId});
+            }).catch( err => {
+                console.log(err);
+            });
+        }).catch(err => {
+            console.log(err);
         });
-
-  account.buildCreateAccount({
-          address: 'address',
-          startingBalance: 10,
-          fee: 100,
-          memoText: 'my first account' //a text memo can also be added; memos cannot exceed 21 characters
-      })
-      .then(createAccountBuilder => {
-          return account.submitTransaction(createAccountBuilder)
-      })
-      .then(transactionId => {
-          console.log('transactionId');
-      });
-
 });
 
-router.get('/pay', function(req, res, next) {
+app.get('/account', function(req, res) {
 
-  client.getMinimumFee()
-        .then(minFee =>{
-            //save minimum fee
-        });
+  console.log(req.body.address);
 
-   //Build the transaction locally
-   account.buildSendKin({
-        address: destination,
-        amount: 20,
-        fee: 100,
-        memoText: 'tx memo'
-    }).then(builder => {
-        //Use the builder to submit the transaction to the blockchain
-        builder => account.submitTransaction(builder)
-    });
-
+    client.getAccountData(req.body.address)
+        .then(accountData => {
+            console.log(accountData);
+            res.json({accountData: accountData});
+        })
 });
 
-router.get('/whitelist', function(req, res, next) {
+app.post('/pay', function(req, res) {
+    client.getMinimumFee()
+        .then(minFee => {
+            account.buildSendKin({
+                address: req.body.address,
+                amount: 100,
+                fee: minFee,
+                memoText: 'tx memo'
+            }).then(builder => {
+                return account.submitTransaction(builder)
+            }).then(transactionId => {
+                console.log(transactionId);
+                res.json({transactionId: transactionId});
+            });
+        });
+});
 
-  const whitelistedTransaction = account.whitelistTransaction({ envelope: clientTransaction, networkId: network_id});
+app.get('/balance', function(req, res) {
+    client.getAccountBalance(req.body.address)
+        .then(balance => {
+            console.log(balance);
+            res.json({balance: balance})
+        });
+});
+
+app.get('/transaction', function(req, res) {
+    client.getTransactionData(req.body.transactionId)
+        .then(transactionData => {
+            console.log(transactionData)
+            res.json({transactionData: transactionData});
+        });
+});
+
+app.post('/whitelist', function(req, res) {
+
+    let whitelistTransaction = account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id});
+
+    console.log(whitelistTransaction);
+
+    res.send(whitelistTransaction);
 
 });
 
