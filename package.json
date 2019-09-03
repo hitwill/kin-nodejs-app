@@ -4,7 +4,6 @@
   "description": "none",
   "main": "app.js",
   "scripts": {
-    "start": "node server.js",
     "devStart": "nodemon server.js"
   },
   "author": "Chase Barker",
@@ -18,6 +17,7 @@
     "express": "^4.16.2",
     "jsonwebtoken": "^8.1.1",
     "mongoose": "^5.0.1",
+    "mongoose-unique-validator": "^2.0.3",
     "vue": "^2.5.17"
   },
   "devDependencies": {
