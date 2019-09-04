@@ -4,7 +4,7 @@
   "description": "none",
   "main": "app.js",
   "scripts": {
-    "devStart": "export NODE_ENV=test && nodemon server.js"
+    "devStart": "export NODE_ENV=test && nodemon server.js || true"
   },
   "author": "Chase Barker",
   "license": "UNLICENSED",
