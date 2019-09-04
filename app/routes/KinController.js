@@ -27,22 +27,22 @@ router.post('/create', function(req, res) {
           }).then(createAccountBuilder => {
               return account.submitTransaction(createAccountBuilder)
           }).then(transactionId => {
-              res.json({transactionId: transactionId});
+              res.status(200).json({transactionId: transactionId});
           }).catch( err => {
-              res.json(err);
+              res.status(500).json(err);
           });
       }).catch(err => {
-          res.json(err);
+          res.status(500).json(err);
       });
 });
 
 router.get('/account', function(req, res) {
   client.getAccountData(req.body.address)
     .then(accountData => {
-        res.json({accountData: accountData});
+        res.status(200).json({accountData: accountData});
     })
     .catch(err => {
-      res.json(err);
+      res.status(500).json(err);
     })
 });
 
@@ -57,45 +57,41 @@ router.post('/pay', function(req, res) {
         }).then(builder => {
             return account.submitTransaction(builder)
         }).then(transactionId => {
-            res.json({transactionId: transactionId});
+            res.status(200).json({transactionId: transactionId});
         })
         .catch(err => {
-          res.json(err);
+          res.status(500).json(err);
         });
     });
 });
 
 router.get('/balance', function(req, res) {
-  console.log(req.body.address);
   client.getAccountBalance(req.body.address)
     .then(balance => {
-        console.log(balance);
         res.json({balance: balance})
     })
     .catch(err => {
-      console.log('what');
-      res.json(err);
+      res.status(500).json(err);
     });
 });
 
 router.get('/transaction', function(req, res) {
   client.getTransactionData(req.body.transactionId)
     .then(transactionData => {
-        console.log(transactionData)
         res.json({transactionData: transactionData});
     })
     .catch(err => {
-      res.json(transactionData);
+      res.status(500).json(transactionData);
     });
 });
 
 router.get('/whitelist', function(req, res) {
     account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id})
     .then(whitelistedString => {
-      res.send(whitelistedString)
+      res.status(200).json(whitelistedString)
     })
     .catch(err => {
-      res.json(err);
+      res.status(500).json(err);
     });
 });
 
