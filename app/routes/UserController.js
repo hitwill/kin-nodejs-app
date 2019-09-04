@@ -12,10 +12,10 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.use(bodyParser.json()); 
 
 // Registers a new user
-router.post('/', function(req, res, next) {
-
-  const hashedPassword = bcrypt.hashSync(req.body.password, 8);
+router.post('/register', async function(req, res, next) {
   
+  const hashedPassword = await bcrypt.hashSync(req.body.password, 8);
+
   const user = new User({
     _id: new mongoose.Types.ObjectId(),
     email: req.body.email,
@@ -23,14 +23,12 @@ router.post('/', function(req, res, next) {
     publicAddress: req.body.publicAddress
   });
 
-  user
-    .save()
-    .then(result => {
-      return res.status(200).send(result);
-    })
-    .catch(err => {
-      res.status(500).json({error: err});
-    });
+  try{
+    const result = await user.save()
+    res.status(200).send(result);
+  } catch(err) {
+    res.status(500).json({error: err});
+  }
 
 });
 
