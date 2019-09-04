@@ -41,10 +41,10 @@ router.get('/login', async function (req, res) {
         const token = jwt.sign({ id: user._id }, process.env.SECRET, {
           expiresIn: 86400 // expires in 24 hours
         });
-        return res.status(200).send({ auth: true, token: token });
+        return res.status(200).json({ auth: true, token: token });
     }
     else{
-        return res.status(403).send('Incorrect login credentials.');
+        return res.status(403).json({error: 'Incorrect login credentials.'});
     }
   } catch(err) {
     res.status(500).json({error: err});
