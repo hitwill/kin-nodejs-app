@@ -1,7 +1,7 @@
 //VerifyToken.js
 
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+//require('dotenv').config();
 
 function verifyToken(req, res, next) {
 

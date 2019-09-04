@@ -5,7 +5,7 @@ const User = require('../schemas/User');
 const VerifyToken = require('../VerifyToken');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
+//require('dotenv').config();
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
