@@ -33,7 +33,7 @@ router.post('/register', async function(req, res, next) {
 });
 
 // Returns all users from the database
-router.get('/', async function (req, res) {
+router.get('/getall', async function (req, res) {
 
   try{
     const users = await User
@@ -48,7 +48,7 @@ router.get('/', async function (req, res) {
 });
 
 // Returns a single user from the database
-router.get('/:id', async function (req, res) {
+router.get('/getone/:id', async function (req, res) {
 
   try{
     const user = await User
@@ -63,7 +63,7 @@ router.get('/:id', async function (req, res) {
 });
 
 // Deletes a single user from the database
-router.delete('/:id', async function (req, res) {
+router.delete('/delete/:id', async function (req, res) {
 
     try{
       const user = await User.findById(req.params.id)
@@ -77,7 +77,7 @@ router.delete('/:id', async function (req, res) {
 });
 
 // Updates a single user in the database
-router.put('/:id', async function (req, res) {
+router.put('/update/:id', async function (req, res) {
 
     try{
       const user = await User
