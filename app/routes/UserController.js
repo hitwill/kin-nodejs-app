@@ -40,10 +40,8 @@ router.get('/', async function (req, res) {
       .find()
       .select("-password")
       .exec();
-
       res.status(200).json(users);
     } catch(err){
-      console.log(err);
       res.status(500).json({error: err});
     }
 
@@ -70,9 +68,7 @@ router.delete('/:id', async function (req, res) {
     try{
       const user = await User.findById(req.params.id)
       .exec()
-
       await user.delete();
-
       res.status(200).json(user.email + ' has been deleted');
     } catch(err){
       res.status(500).json({error: err});
@@ -87,10 +83,8 @@ router.put('/:id', async function (req, res) {
       const user = await User
         .findById(req.params.id)
         .exec();
-
       user.email = req.body.email;
       await user.save();
-
       res.status(200).json('User email has been updated to ' + user.email);    
     } catch(err){
       res.status(500).json({error: err});
