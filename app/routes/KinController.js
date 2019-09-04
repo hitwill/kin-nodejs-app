@@ -36,14 +36,15 @@ router.post('/create', function(req, res) {
       });
 });
 
-router.get('/account', function(req, res) {
-  client.getAccountData(req.body.address)
-    .then(accountData => {
-        res.status(200).json({accountData: accountData});
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    })
+router.get('/account', async function(req, res) {
+
+  try{
+    const accountData = await client.getAccountData(req.body.address);
+    res.status(200).json({accountData: accountData});
+  } catch(err){
+    res.status(500).json({error: err});
+  }
+
 });
 
 router.post('/pay', function(req, res) {
@@ -65,24 +66,27 @@ router.post('/pay', function(req, res) {
     });
 });
 
-router.get('/balance', function(req, res) {
-  client.getAccountBalance(req.body.address)
-    .then(balance => {
-        res.json({balance: balance})
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
+router.get('/balance', async function(req, res) {
+
+  try{
+    const accountBalance = await client.getAccountBalance(req.body.address);
+    res.status(200).json({balance: accountBalance});
+  } catch(err){
+    res.status(500).json({error: err});
+  }
+
 });
 
-router.get('/transaction', function(req, res) {
-  client.getTransactionData(req.body.transactionId)
-    .then(transactionData => {
-        res.json({transactionData: transactionData});
-    })
-    .catch(err => {
-      res.status(500).json(transactionData);
-    });
+router.get('/transaction', async function(req, res) {
+
+  try{
+    const transactionData = await client.getTransactionData(req.body.transactionId);
+    res.status(200).json({transactionData: transactionData});
+  } catch(err){
+    console.log(err);
+    res.status(500).json({error: err});
+  }
+
 });
 
 router.get('/whitelist', function(req, res) {
