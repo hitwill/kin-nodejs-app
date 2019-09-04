@@ -16,24 +16,22 @@ const account = client.createKinAccount({
             //channelSecretKeys: ['channel_seed1', 'channel_seed2']
         });
 
-router.post('/create', function(req, res) {
-  client.getMinimumFee()
-      .then(minFee => {
-          account.buildCreateAccount({
-              address: req.body.address,
-              startingBalance: 100,
-              fee: minFee,
-              memoText: 'kinwallet'
-          }).then(createAccountBuilder => {
-              return account.submitTransaction(createAccountBuilder)
-          }).then(transactionId => {
-              res.status(200).json({transactionId: transactionId});
-          }).catch( err => {
-              res.status(500).json(err);
-          });
-      }).catch(err => {
-          res.status(500).json(err);
-      });
+router.post('/create', async function(req, res) {
+
+  try{
+    const minFee = await client.getMinimumFee();
+    const createAccountBuilder = await buildCreateAccount({
+      address: req.body.address,
+      startingBalance: 100,
+      fee: minFee,
+      memoText: 'kinwallet'
+    });
+    const transactionId = await account.submitTransaction(createAccountBuilder);
+    res.status(200).json({transactionId: transactionId});
+  } catch(err){
+    res.status(500).json({error: err});
+  }
+
 });
 
 router.get('/account', async function(req, res) {
@@ -47,23 +45,22 @@ router.get('/account', async function(req, res) {
 
 });
 
-router.post('/pay', function(req, res) {
-  client.getMinimumFee()
-    .then(minFee => {
-        account.buildSendKin({
+router.post('/pay', async function(req, res) {
+
+  try{
+    const minFee = await client.getMinimumFee();
+    const builder = await ccount.buildSendKin({
             address: req.body.address,
             amount: 100,
             fee: minFee,
             memoText: 'tx memo'
-        }).then(builder => {
-            return account.submitTransaction(builder)
-        }).then(transactionId => {
-            res.status(200).json({transactionId: transactionId});
-        })
-        .catch(err => {
-          res.status(500).json(err);
         });
-    });
+    const transactionId = await account.submitTransaction(builder);
+    res.status(200).json({transactionId: transactionId});
+  } catch(err){
+    res.status(500).json({error: err});
+  }
+
 });
 
 router.get('/balance', async function(req, res) {
@@ -89,14 +86,15 @@ router.get('/transaction', async function(req, res) {
 
 });
 
-router.get('/whitelist', function(req, res) {
-    account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id})
-    .then(whitelistedString => {
-      res.status(200).json(whitelistedString)
-    })
-    .catch(err => {
-      res.status(500).json(err);
-    });
+router.get('/whitelist', async function(req, res) {
+
+    try{
+      const whitelistedString = await account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id});
+      res.status(200).json(whitelistedString);
+    } catch(err){
+      res.status(500).json({error: err});
+    }
+
 });
 
 module.exports = router;
