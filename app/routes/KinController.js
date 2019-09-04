@@ -10,7 +10,7 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(bodyParser.json());
 
 const account = client.createKinAccount({
-            //your seed goes here
+            //your seed goes here//
             seed: process.env.PLAYGROUND_SEED,
             appId: 'chas',
             //channelSecretKeys: ['channel_seed1', 'channel_seed2']
@@ -90,13 +90,13 @@ router.get('/transaction', function(req, res) {
 });
 
 router.get('/whitelist', function(req, res) {
-
-    let whitelistTransaction = account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id});
-
-    console.log(whitelistTransaction);
-
-    res.send(whitelistTransaction);
-
+    account.whitelistTransaction({ envelope: req.body.envelope, networkId : req.body.network_id})
+    .then(whitelistedString => {
+      res.send(whitelistedString)
+    })
+    .catch(err => {
+      res.json(err);
+    });
 });
 
 module.exports = router;
