@@ -1,7 +1,9 @@
-//VerifyToken.js
 
 const jwt = require('jsonwebtoken');
-//require('dotenv').config();
+
+if(process.env.NODE_ENV === 'test'){
+  require('dotenv').config();
+}
 
 function verifyToken(req, res, next) {
 

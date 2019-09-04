@@ -1,6 +1,9 @@
-//require('dotenv').config();
 
 const mongoose = require('mongoose');
+
+if(process.env.NODE_ENV === 'test'){
+    require('dotenv').config();
+}
 
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true });
 
